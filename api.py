@@ -13,6 +13,7 @@ from sklearn.model_selection import train_test_split
 import joblib
 from joblib import dump, load
 import pickle
+from sklearn.preprocessing import MinMaxScaler
 
 users = {
   "alice": "wonderland",
@@ -20,8 +21,8 @@ users = {
   "clementine": "mandarine"
 }
 
-#lr_model=pickle.load(open('lr_best_classifier.pkl','rb'))
-#rf_model=pickle.load(open('rf_best_classifier.pkl','rb'))
+lr_model=pickle.load(open('lr_best_classifier.pkl','rb'))
+rf_model=pickle.load(open('rf_best_classifier.pkl','rb'))
 
 
 class Individual(BaseModel):
@@ -86,7 +87,7 @@ def get_status(username: str = Depends(get_current_username)):
 
 @api.post('/users/prediction', name='Get stroke prediction for one or more individuals', tags=['Prediction'])
 async def get_prediction(model: str, individuals: List[Individual], username: str = Depends(get_current_username)):
-    """This function returns stroke predictions for ine or many individuals.\n
+    """This function returns stroke predictions for one or many individuals.\n
        MODEL : lr (LogisticRegression) / rf (Random Forest Classification)
     """
     
@@ -117,8 +118,8 @@ async def get_prediction(model: str, individuals: List[Individual], username: st
             individus.append(individu)
         df = pd.DataFrame(individus)
         df = df.set_index('id')
-        scaler=load('../Model/minmax_scaler.bin')
-        df = scaler.transform(df)
+        scaler = MinMaxScaler()
+        df = scaler.fit_transform(df)
         pred =choice.predict(df)
         pred_lists = pred.tolist()
         pred_jason = json.dumps(pred_lists)
@@ -151,8 +152,8 @@ async def get_prediction_file(model: str, csv_file: UploadFile = File(...), user
             return 'The given model is missing or incorrect'
             
         df = pd.read_csv(csv_file.file, sep = ',', header = 0, index_col = 0)
-        scaler=load('../Model/minmax_scaler.bin')
-        df = scaler.transform(df)
+        scaler = MinMaxScaler()
+        df = scaler.fit_transform(df)
         pred = choice.predict(df)
         pred_lists = pred.tolist()
         pred_jason = json.dumps(pred_lists)
