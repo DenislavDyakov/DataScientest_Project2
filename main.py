@@ -1,12 +1,43 @@
-from fastapi import FastAPI, Depends, HTTPException
-from auth import AuthenticationHandler
-from schemas import AuthDetails
+from data_preprocess import imput_missing_values, scale_values, encode_values, input_data, data_preprocessing
+import pickle
+import secrets
+from fastapi import FastAPI, Depends, HTTPException, status, File, UploadFile
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from typing import List
+import pandas as pd
+
+import json
+
+from schemas import Individual, Model
 
 
-app = FastAPI()
+app = FastAPI(
+    title="API for Predicting Strokes",
+    description="API for Predicting Strokes"
+)
 
-authentication_handler = AuthenticationHandler()
-users = []
+
+security = HTTPBasic()
+users = {
+    "denis": "12345",
+    "hamid": "12345"
+}
+
+
+def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
+    correct_username = [True if credentials.username in users else False]
+
+    if correct_username:
+        correct_password = secrets.compare_digest(credentials.password, users[credentials.username])
+
+    if correct_username is False or correct_password is False:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+    return credentials.username
+
 
 
 @app.get('/')
@@ -14,37 +45,68 @@ def landing_page():
     return {'hello': 'world'}
 
 
-@app.post('/register', status_code=201)
-def register(auth_details: AuthDetails):
-    if any(user['username'] == auth_details.username for user in users):
-        raise HTTPException(status_code=400, detail='This username has already been taken. Please choose another one.')
-    hashed_password = authentication_handler.get_hashed_password(auth_details.password)
-    users.append({
-        'username': auth_details.username,
-        'password': hashed_password
-    })
-    return f'User {auth_details.username} has been successfully created.'
+@app.post('/users/prediction', name='Get stroke prediction for one or more individuals')
+async def get_prediction(model: str, individuals: List[Individual], username: str = Depends(get_current_username)):
+    """Predict by using a list of 1 or more json objects as source data.\n
+       The user should choose between 2 available models: \n
+       lr - Logistic Regression \n
+       rf - Random Forest Classifier \n
+    """
+    if model == "lr":
+        choice = pickle.load(open('lr_best_classifier.pkl', 'rb'))
+    elif model == "rf":
+        choice = pickle.load(open('rf_best_classifier.pkl', 'rb'))
+    else:
+        return 'Please select a valid model.'
+
+    patients = []
+    for index, individual in enumerate(individuals):
+        patient = {
+            'id': individual.id,
+            'gender': individual.gender,
+            'age': individual.age,
+            'hypertension': individual.hypertension,
+            'heart_disease': individual.heart_disease,
+            'ever_married': individual.ever_married,
+            'work_type': individual.work_type,
+            'residence_type': individual.residence_type,
+            'avg_glucose_level': individual.avg_glucose_level,
+            'bmi': individual.bmi,
+            'smoking_status': individual.smoking_status
+        }
+        patients.append(patient)
+    df = pd.DataFrame(patients)
+    df = df.set_index('id')
+    df = input_data(df)
+    df = imput_missing_values(df)
+    df = encode_values(df)
+    df = scale_values(df)
+    df = data_preprocessing(df)
+    prediction = json.dumps((choice.predict(df).tolist()))
+    # pred_lists = pred.tolist()
+    return prediction
 
 
-@app.post('/login')
-def login(auth_details: AuthDetails):
-    user_details = None
-    for detail in users:
-        if detail['username'] == auth_details.username:
-            user_details = detail
-            break
-    if (user_details is None) or (not authentication_handler.verify_password(auth_details.password, user_details['password'])):
-        raise HTTPException(status_code=401, detail='Invalid username or password.')
-    token = authentication_handler.create_token(user_details['username'])
-    return {'token': token}
+@app.post('/file/prediction', name='Get stroke prediction for individuals by using a file')
+async def get_prediction_file(model: str, file: UploadFile = File(...), username: str = Depends(get_current_username)):
+    """Predict by using a csv file as source data.\n
+       The user should choose between 2 available models: \n
+       lr - Logistic Regression \n
+       rf - Random Forest Classifier \n
+    """
+    if model == "lr":
+        choice = pickle.load(open('lr_best_classifier.pkl', 'rb'))
+    elif model == "rf":
+        choice = pickle.load(open('rf_best_classifier.pkl', 'rb'))
+    else:
+        return 'Please select a valid model.'
 
+    df = pd.read_csv(file.filename, sep=',', header=0, index_col=0)
+    df = input_data(df)
+    df = imput_missing_values(df)
+    df = encode_values(df)
+    df = scale_values(df)
+    df = data_preprocessing(df)
+    prediction = json.dumps(choice.predict(df).tolist())
+    return prediction
 
-@app.get('/protected')
-def protected(username=Depends(authentication_handler.auth_wrapper)):
-    return {'username': username}
-
-
-@app.get('/evaluate')
-def evaluate(result=Depends(authentication_handler.auth_wrapper)):
-    result
-    return f'The result is: {result}'
