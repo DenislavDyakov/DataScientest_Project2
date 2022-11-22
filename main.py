@@ -8,7 +8,7 @@ import pandas as pd
 
 import json
 
-from schemas import Individual, Model
+from schemas import Individual
 
 
 app = FastAPI(
@@ -82,9 +82,11 @@ async def get_prediction(model: str, individuals: List[Individual], username: st
     df = encode_values(df)
     df = scale_values(df)
     df = data_preprocessing(df)
-    prediction = json.dumps((choice.predict(df).tolist()))
-    # pred_lists = pred.tolist()
-    return prediction
+    prediction = json.dumps(choice.predict(df).tolist())
+    probability = json.dumps(choice.predict_proba(df).tolist())
+    return {"user": username,
+            "prediction": prediction,
+            "probability": probability}
 
 
 @app.post('/file/prediction', name='Get stroke prediction for individuals by using a file')
@@ -108,5 +110,7 @@ async def get_prediction_file(model: str, file: UploadFile = File(...), username
     df = scale_values(df)
     df = data_preprocessing(df)
     prediction = json.dumps(choice.predict(df).tolist())
-    return prediction
-
+    probability = json.dumps(choice.predict_proba(df).tolist())
+    return {"user": username,
+            "prediction": prediction,
+            "probability": probability}
