@@ -2,7 +2,7 @@ import os
 import requests
 from requests.auth import HTTPBasicAuth
 
-api_address = '0.0.0.0'
+api_address = '172.27.1.1'
 api_port = 8000
 
 rf_model = 'rf'
@@ -61,7 +61,7 @@ def test_model_lr():
 
     output = '''
     ============================
-        Users prediction test
+        String prediction test
     ============================
     request done at "/string_prediction"
     | model="lr"
@@ -81,13 +81,11 @@ def test_model_lr():
     else:
         test_status = 'FAILURE'
     print(output.format(result=result, test_status=test_status))
-
-
+    log = os.environ.get('LOG')
     # Printing in a file
-    if os.environ.get('LOG') == '1':
-        with open('/shared_volume/api_test.txt', 'a') as file:
+    if os.environ.get('LOG') == None:
+        with open('./my_volume/api_test.txt', 'a') as file:
             file.write(output)
-
 
 
 # request2
@@ -140,7 +138,7 @@ def test_model_rf():
 
     output = '''
     ============================
-        Users prediction test
+        String prediction test
     ============================
     request done at "/string_prediction"
     | model="rf"
@@ -161,11 +159,9 @@ def test_model_rf():
         test_status = 'FAILURE'
     print(output.format(result=result, test_status=test_status))
 
-    log = os.environ.get('LOG')
-
     # Printing in a file
-    if int(log) == 1:
-        with open('api_test.log', 'a') as file:
+    if os.environ.get('LOG') == None:
+        with open('./my_volume/api_test.txt', 'a') as file:
             file.write(output)
 
 
@@ -219,7 +215,7 @@ def test_model_unknown():
 
     output = '''
     ============================
-        Users prediction test
+        String prediction test
     ============================
     request done at "/string_prediction"
     | model="unknown"
@@ -240,11 +236,9 @@ def test_model_unknown():
         test_status = 'FAILURE'
     print(output.format(result=result, test_status=test_status))
 
-    log = os.environ.get('LOG')
-
     # Printing in a file
-    if int(log) == 1:
-        with open('api_test.log', 'a') as file:
+    if os.environ.get('LOG') == None:
+        with open('./my_volume/api_test.txt', 'a') as file:
             file.write(output)
 
 # request4
@@ -256,7 +250,7 @@ def test_file_lr():
 
     output = '''
     ============================
-        Users prediction test
+        File prediction test
     ============================
     request done at "/file_prediction"
     | model="lr"
@@ -277,13 +271,10 @@ def test_file_lr():
         test_status = 'FAILURE'
     print(output.format(result=result, test_status=test_status))
 
-    log = os.environ.get('LOG')
-
     # Printing in a file
-    if int(log) == 1:
-        with open('api_test.log', 'a') as file:
+    if os.environ.get('LOG') == None:
+        with open('./my_volume/api_test.txt', 'a') as file:
             file.write(output)
-
 
 # request5
 def test_file_rf():
@@ -294,7 +285,7 @@ def test_file_rf():
 
     output = '''
     ============================
-        Users prediction test
+        File prediction test
     ============================
     request done at "/file_prediction"
     | model="rf"
@@ -315,13 +306,10 @@ def test_file_rf():
         test_status = 'FAILURE'
     print(output.format(result=result, test_status=test_status))
 
-    log = os.environ.get('LOG')
-
     # Printing in a file
-    if int(log) == 1:
-        with open('api_test.log', 'a') as file:
+    if os.environ.get('LOG') == None:
+        with open('./my_volume/api_test.txt', 'a') as file:
             file.write(output)
-
 
 # request6
 def test_file_unknown():
@@ -332,7 +320,7 @@ def test_file_unknown():
 
     output = '''
     ============================
-        Users prediction test
+        File prediction test
     ============================
     request done at "/file_prediction"
     | model="unknown"
@@ -353,11 +341,9 @@ def test_file_unknown():
         test_status = 'FAILURE'
     print(output.format(result=result, test_status=test_status))
 
-    log = os.environ.get('LOG')
-
     # Printing in a file
-    if int(log) == 1:
-        with open('api_test.log', 'a') as file:
+    if os.environ.get('LOG') == None:
+        with open('./my_volume/api_test.txt', 'a') as file:
             file.write(output)
 
 # request7
@@ -371,7 +357,7 @@ def test_file_not_csv():
 
      output = '''
      ============================
-         Users prediction test
+         File prediction test
      ============================
      request done at "/file_prediction"
      | model="rf"
@@ -384,48 +370,26 @@ def test_file_not_csv():
      status_code = r.status_code
      # Query result
      result = r.json()
+     print(result)
 
      # Display results
-     if result == "{'detail': 'Invalid document type - please upload a CSV.'}":
+     if result == "{'Bad Type'}":
          test_status = 'SUCCESS'
      else:
          test_status = 'FAILURE'
      print(output.format(result=result, test_status=test_status))
 
-     log = os.environ.get('LOG')
-
      # Printing in a file
-     if int(log) == 1:
-         with open('api_test.log', 'a') as file:
-             file.write(output)
+     if os.environ.get('LOG') == None:
+        with open('./my_volume/api_test.txt', 'a') as file:
+            file.write(output)
+
 
 ##########################################################################################################################
 test_model_lr()
-#test_model_rf()
-#test_model_unknown()
-#test_file_lr()
-#test_file_rf()
-#test_file_unknown()
+test_model_rf()
+test_model_unknown()
+test_file_lr()
+test_file_rf()
+test_file_unknown()
 #test_file_not_csv()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,6 +1,6 @@
 FROM ubuntu:20.04
 
-ADD main.py data_preprocess.py requirements.txt strokes_for_prediction.csv schemas.py lr_best_classifier.pkl rf_best_classifier.pkl ./
+ADD main.py data_preprocess.py requirements.txt strokes_for_prediction.csv strokes_for_prediction.txt schemas.py lr_best_classifier.pkl rf_best_classifier.pkl ./
 
 
 RUN apt-get update && apt-get install python3-pip -y && pip install -r ./requirements.txt
