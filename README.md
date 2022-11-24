@@ -57,5 +57,5 @@ function test() {
 
 ## Deployment
 
-A link to the Docker container can be found here: <https://hub.docker.com/example.com>
+A link to the Docker container can be found here: <https://hub.docker.com/repository/docker/younesabdh/stroke_api_image>
 
