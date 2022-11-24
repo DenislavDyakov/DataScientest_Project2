@@ -143,3 +143,57 @@
     actual result = {result}
     ==>  {test_status}
     
+    ============================
+        String prediction test
+    ============================
+    request done at "/string_prediction"
+    | model="lr"
+    expected result = [0, 1, 1]
+    actual result = {result}
+    ==>  {test_status}
+    
+    ============================
+        String prediction test
+    ============================
+    request done at "/string_prediction"
+    | model="rf"
+    expected result = [0, 1, 1]
+    actual result = {result}
+    ==>  {test_status}
+    
+    ============================
+        String prediction test
+    ============================
+    request done at "/string_prediction"
+    | model="unknown"
+    expected result = Please select a valid model.
+    actual result = {result}
+    ==>  {test_status}
+    
+    ============================
+        File prediction test
+    ============================
+    request done at "/file_prediction"
+    | model="lr"
+    expected result = '[1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1]'
+    actual result = {result}
+    ==>  {test_status}
+    
+    ============================
+        File prediction test
+    ============================
+    request done at "/file_prediction"
+    | model="rf"
+    expected result = '[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]'
+    actual result = {result}
+    ==>  {test_status}
+    
+    ============================
+        File prediction test
+    ============================
+    request done at "/file_prediction"
+    | model="unknown"
+    expected result = 'Please select a valid model.'
+    actual result = {result}
+    ==>  {test_status}
+    
