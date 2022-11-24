@@ -8,7 +8,7 @@ api_address = ''
 api_port = 8000
 
 # request1
-def test1():
+def api_test1():
 	r = requests.post(
     	url='http://{address}:{port}/users/prediction'.format(address=api_address, port=api_port), auth=HTTPBasicAuth('alice', 'wonderland'),
     	params= {
