@@ -1,13 +1,14 @@
 version: '3.9'
 services:
   stroke_api:
-    image: stroke-api_image:latest
+    image: stroke_api_image:latest
     ports:
       - "8000:8000"
     container_name: stroke_api_container
     networks:
       docker_network:
         ipv4_address: 172.27.1.1
+
   tests:
     image: tests_image:latest
     container_name: tests_container
@@ -20,6 +21,7 @@ services:
       LOG: "1"
     depends_on:
       - "stroke_api"
+
 networks:
   docker_network:
       ipam:

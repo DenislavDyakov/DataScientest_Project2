@@ -45,23 +45,24 @@ def landing_page():
     return {'hello': 'world'}
 
 
-@app.post('/users/prediction', name='Get stroke prediction for one or more individuals')
+@app.post('/string_prediction', name='Get stroke prediction for one or more individuals')
 async def get_prediction(model: str, individuals: List[Individual], username: str = Depends(get_current_username)):
     """Predict by using a list of 1 or more json objects as source data.\n
        The user should choose between 2 available models: \n
        lr - Logistic Regression \n
        rf - Random Forest Classifier \n
     """
-    if model == "lr":
-        choice = pickle.load(open('lr_best_classifier.pkl', 'rb'))
-    elif model == "rf":
-        choice = pickle.load(open('rf_best_classifier.pkl', 'rb'))
-    else:
-        return 'Please select a valid model.'
+    try:
+      if model == "lr":
+          choice = pickle.load(open('lr_best_classifier.pkl', 'rb'))
+      elif model == "rf":
+          choice = pickle.load(open('rf_best_classifier.pkl', 'rb'))
+      else:
+          return 'Please select a valid model.'
 
-    patients = []
-    for index, individual in enumerate(individuals):
-        patient = {
+      patients = []
+      for index, individual in enumerate(individuals):
+          patient = {
             'id': individual.id,
             'gender': individual.gender,
             'age': individual.age,
@@ -73,44 +74,62 @@ async def get_prediction(model: str, individuals: List[Individual], username: st
             'avg_glucose_level': individual.avg_glucose_level,
             'bmi': individual.bmi,
             'smoking_status': individual.smoking_status
-        }
-        patients.append(patient)
-    df = pd.DataFrame(patients)
-    df = df.set_index('id')
-    df = input_data(df)
-    df = imput_missing_values(df)
-    df = encode_values(df)
-    df = scale_values(df)
-    df = data_preprocessing(df)
-    prediction = json.dumps(choice.predict(df).tolist())
-    probability = json.dumps(choice.predict_proba(df).tolist())
-    return {"user": username,
-            "prediction": prediction,
-            "probability": probability}
+          }
+          patients.append(patient)
+      df = pd.DataFrame(patients)
+      df = df.set_index('id')
+      df = input_data(df)
+      df = imput_missing_values(df)
+      df = encode_values(df)
+      df = scale_values(df)
+      df = data_preprocessing(df)
+      prediction = json.dumps(choice.predict(df).tolist())
+      probability = json.dumps(choice.predict_proba(df).tolist())
+      return {"user": username,
+              "prediction": prediction,
+              "probability": probability}
+    except IndexError:
+        raise HTTPException(
+            status_code=404,
+            detail='Unknown Index')
+    except ValueError:
+        raise HTTPException(
+            status_code=400,
+            detail='Bad Type'
+        )    
 
-
-@app.post('/file/prediction', name='Get stroke prediction for individuals by using a file')
+@app.post('/file_prediction', name='Get stroke prediction for individuals by using a file')
 async def get_prediction_file(model: str, file: UploadFile = File(...), username: str = Depends(get_current_username)):
     """Predict by using a csv file as source data.\n
        The user should choose between 2 available models: \n
        lr - Logistic Regression \n
        rf - Random Forest Classifier \n
     """
-    if model == "lr":
-        choice = pickle.load(open('lr_best_classifier.pkl', 'rb'))
-    elif model == "rf":
-        choice = pickle.load(open('rf_best_classifier.pkl', 'rb'))
-    else:
-        return 'Please select a valid model.'
+    try:
+      if model == "lr":
+          choice = pickle.load(open('lr_best_classifier.pkl', 'rb'))
+      elif model == "rf":
+          choice = pickle.load(open('rf_best_classifier.pkl', 'rb'))
+      else:
+          return 'Please select a valid model.'
 
-    df = pd.read_csv(file.filename, sep=',', header=0, index_col=0)
-    df = input_data(df)
-    df = imput_missing_values(df)
-    df = encode_values(df)
-    df = scale_values(df)
-    df = data_preprocessing(df)
-    prediction = json.dumps(choice.predict(df).tolist())
-    probability = json.dumps(choice.predict_proba(df).tolist())
-    return {"user": username,
-            "prediction": prediction,
-            "probability": probability}
+      df = pd.read_csv(file.filename, sep=',', header=0, index_col=0)
+      df = input_data(df)
+      df = imput_missing_values(df)
+      df = encode_values(df)
+      df = scale_values(df)
+      df = data_preprocessing(df)
+      prediction = json.dumps(choice.predict(df).tolist())
+      probability = json.dumps(choice.predict_proba(df).tolist())
+      return {"user": username,
+              "prediction": prediction,
+              "probability": probability}
+    except IndexError:
+        raise HTTPException(
+            status_code=404,
+            detail='Unknown Index')
+    except ValueError:
+        raise HTTPException(
+            status_code=400,
+            detail='Bad Type'
+        )
