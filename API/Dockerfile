@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM debian:latest
 
 ADD main.py data_preprocess.py requirements.txt strokes_for_prediction.csv strokes_for_prediction.txt schemas.py lr_best_classifier.pkl rf_best_classifier.pkl ./
 

@@ -2,7 +2,7 @@ import os
 import requests
 from requests.auth import HTTPBasicAuth
 
-api_address = '172.27.1.1'
+api_address = '172.29.1.1'
 api_port = 8000
 
 rf_model = 'rf'
@@ -83,7 +83,7 @@ def test_model_lr():
     print(output.format(result=result, test_status=test_status))
     log = os.environ.get('LOG')
     # Printing in a file
-    if os.environ.get('LOG') == None:
+    if os.environ.get('LOG') == '1':
         with open('./my_volume/api_test.txt', 'a') as file:
             file.write(output)
 
@@ -160,7 +160,7 @@ def test_model_rf():
     print(output.format(result=result, test_status=test_status))
 
     # Printing in a file
-    if os.environ.get('LOG') == None:
+    if os.environ.get('LOG') == '1':
         with open('./my_volume/api_test.txt', 'a') as file:
             file.write(output)
 
@@ -237,7 +237,7 @@ def test_model_unknown():
     print(output.format(result=result, test_status=test_status))
 
     # Printing in a file
-    if os.environ.get('LOG') == None:
+    if os.environ.get('LOG') == '1':
         with open('./my_volume/api_test.txt', 'a') as file:
             file.write(output)
 
@@ -272,7 +272,7 @@ def test_file_lr():
     print(output.format(result=result, test_status=test_status))
 
     # Printing in a file
-    if os.environ.get('LOG') == None:
+    if os.environ.get('LOG') == '1':
         with open('./my_volume/api_test.txt', 'a') as file:
             file.write(output)
 
@@ -307,7 +307,7 @@ def test_file_rf():
     print(output.format(result=result, test_status=test_status))
 
     # Printing in a file
-    if os.environ.get('LOG') == None:
+    if os.environ.get('LOG') == '1':
         with open('./my_volume/api_test.txt', 'a') as file:
             file.write(output)
 
@@ -342,7 +342,7 @@ def test_file_unknown():
     print(output.format(result=result, test_status=test_status))
 
     # Printing in a file
-    if os.environ.get('LOG') == None:
+    if os.environ.get('LOG') == '1':
         with open('./my_volume/api_test.txt', 'a') as file:
             file.write(output)
 
@@ -380,7 +380,7 @@ def test_file_not_csv():
      print(output.format(result=result, test_status=test_status))
 
      # Printing in a file
-     if os.environ.get('LOG') == None:
+     if os.environ.get('LOG') == '1':
         with open('./my_volume/api_test.txt', 'a') as file:
             file.write(output)
 

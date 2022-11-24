@@ -1,22 +1,20 @@
 version: '3.9'
 services:
   stroke_api:
-    image: stroke_api_image:latest
+    build: ./API
     ports:
       - "8000:8000"
-    container_name: stroke_api_container
     networks:
       docker_network:
-        ipv4_address: 172.27.1.1
+        ipv4_address: 172.29.1.1
 
   tests:
-    image: tests_image:latest
-    container_name: tests_container
+    build: ./Docker
     volumes:
       - ./my_volume:/shared_volume
     networks:
       docker_network:
-        ipv4_address: 172.27.1.2
+        ipv4_address: 172.29.1.2
     environment: 
       LOG: "1"
     depends_on:
@@ -27,4 +25,4 @@ networks:
       ipam:
          driver: default
          config:
-            - subnet: 172.27.0.0/16
+            - subnet: 172.29.0.0/16
