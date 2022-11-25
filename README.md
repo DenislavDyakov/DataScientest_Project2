@@ -24,9 +24,25 @@ The repo consists of the following folders:
 
 The follwoing CURl can be used to test the endpoint:
 ```
-function test() {
-  console.log("notice the blank line before this function?");
-}
+curl -X 'POST' \
+  'http://127.0.0.1:8000/string_prediction?model=lr' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '[
+  {
+    "id": "11111",
+    "gender": "Male",
+    "age": 67,
+    "hypertension": 1,
+    "heart_disease": 1,
+    "ever_married": "Yes",
+    "work_type": "Private",
+    "residence_type": "Urban",
+    "avg_glucose_level": 228.69,
+    "bmi": 36.6,
+    "smoking_status": "formerly smoked"
+  }
+]'
 ```
 
 - POST ('/file_prediction') - get a prediction based on a source csv file. The function requires that one of the two models is passed as a parameter ('lr' - Logistic Regression or 'rf' - Random Forest Classifier).
@@ -50,9 +66,11 @@ The csv should contain the following columns:
 
 The following CURL can be used to test the endpoint:
 ```
-function test() {
-  console.log("notice the blank line before this function?");
-}
+curl -X 'POST' \
+  'http://127.0.0.1:8000/file_prediction?model=lr' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: multipart/form-data' \
+  -F 'file=@strokes_for_prediction.csv;type=text/csv'
 ```
 
 ## Deployment
