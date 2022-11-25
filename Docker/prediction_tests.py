@@ -12,7 +12,7 @@ files = {'file': ('strokes_for_prediction.csv', open('strokes_for_prediction.csv
 files_txt = {'file': ('strokes_for_prediction.txt', open('strokes_for_prediction.txt', 'rb'), 'text/plain')}
 
 # request1
-def test_model_lr():
+def model_lr():
     r = requests.post(
         url='http://{address}:{port}/string_prediction?model={model}'.format(address=api_address, port=api_port, model=lr_model), auth=HTTPBasicAuth('denis', '12345'),
         headers={"Accept": "application/json"},
@@ -89,7 +89,7 @@ def test_model_lr():
 
 
 # request2
-def test_model_rf():
+def model_rf():
     r = requests.post(
         url='http://{address}:{port}/string_prediction?model={model}'.format(address=api_address, port=api_port, model=rf_model), auth=HTTPBasicAuth('denis', '12345'),
         headers={"Accept": "application/json"},
@@ -166,7 +166,7 @@ def test_model_rf():
 
 
 # request3
-def test_model_unknown():
+def model_unknown():
     r = requests.post(
         url='http://{address}:{port}/string_prediction?model={model}'.format(address=api_address, port=api_port, model=unknown_model), auth=HTTPBasicAuth('denis', '12345'),
         headers={"Accept": "application/json"},
@@ -242,7 +242,7 @@ def test_model_unknown():
             file.write(output)
 
 # request4
-def test_file_lr():
+def file_lr():
     r = requests.post(
         url='http://{address}:{port}/file_prediction?model={model}'.format(address=api_address, port=api_port, model=lr_model), auth=HTTPBasicAuth('denis', '12345'),
         files=files
@@ -277,7 +277,7 @@ def test_file_lr():
             file.write(output)
 
 # request5
-def test_file_rf():
+def file_rf():
     r = requests.post(
         url='http://{address}:{port}/file_prediction?model={model}'.format(address=api_address, port=api_port, model=rf_model), auth=HTTPBasicAuth('denis', '12345'),
         files=files
@@ -312,7 +312,7 @@ def test_file_rf():
             file.write(output)
 
 # request6
-def test_file_unknown():
+def file_unknown():
     r = requests.post(
         url='http://{address}:{port}/file_prediction?model={model}'.format(address=api_address, port=api_port, model=unknown_model), auth=HTTPBasicAuth('denis', '12345'),
         files=files
@@ -347,7 +347,7 @@ def test_file_unknown():
             file.write(output)
 
 # request7
-def test_file_not_csv():
+def file_not_csv():
      r = requests.post(
          url='http://{address}:{port}/file_prediction?model={model}'.format(address=api_address, port=api_port,
                                                                             model=rf_model),
@@ -386,10 +386,10 @@ def test_file_not_csv():
 
 
 ##########################################################################################################################
-test_model_lr()
-test_model_rf()
-test_model_unknown()
-test_file_lr()
-test_file_rf()
-test_file_unknown()
-#test_file_not_csv()
+model_lr()
+model_rf()
+model_unknown()
+file_lr()
+file_rf()
+file_unknown()
+#file_not_csv()
