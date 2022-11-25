@@ -51,17 +51,17 @@ The csv should contain the following columns:
 
 | Name  | Data Type | Valid Values | 
 | ------------- | ------------- | ------------- |
-| id  | int  | |
-| gender  | str  | |
-| age  | float  | |
-| hypertension  | int  | |
-| heart_disease  | int  | |
-| ever_married  | str  | |
-| work_type  | str  | |
-| residence_type  | str  | |
-| avg_glucose_level  | float  | |
-| bmi  | float  | |
-| smoking_status | str | |
+| id  | int  | any integer value|
+| gender  | str  | 'Male', 'Female'|
+| age  | float  | any integer value|
+| hypertension  | int  | any integer value|
+| heart_disease  | int  | 0 or 1|
+| ever_married  | str  | 'Yes', 'No'|
+| work_type  | str  | 'Private', 'Self-employed', 'Govt_job', 'children', 'Never_worked' |
+| residence_type  | str  | 'Urban', 'Rural'|
+| avg_glucose_level  | float  | any float value|
+| bmi  | float  | any float value|
+| smoking_status | str | 'formerly smoked', 'never smoked', 'smokes', 'Unknown'|
 
 
 The following CURL can be used to test the endpoint:
