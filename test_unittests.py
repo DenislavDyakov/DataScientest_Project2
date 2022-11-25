@@ -1,4 +1,4 @@
-from Api.main import get_prediction
+from API.main import get_prediction
 import pytest
 
 
