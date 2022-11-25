@@ -1,4 +1,4 @@
-from data_preprocess import imput_missing_values, scale_values, encode_values, input_data, data_preprocessing
+from API.data_preprocess import imput_missing_values, scale_values, encode_values, input_data, data_preprocessing
 import pickle
 import secrets
 from fastapi import FastAPI, Depends, HTTPException, status, File, UploadFile
@@ -8,7 +8,7 @@ import pandas as pd
 
 import json
 
-from schemas import Individual
+from API.schemas import Individual
 
 
 app = FastAPI(
